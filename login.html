@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>Login</title>
+		<style>
+			:root{--bg:#f6f8fb;--card:#fff;--accent:#2563eb;--muted:#6b7280}
+			html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+			body{display:grid;place-items:center;background:linear-gradient(180deg,#f8fafc, #eef2ff)}
+			.container{width:100%;max-width:420px;padding:24px}
+			.card{background:var(--card);border-radius:12px;box-shadow:0 6px 20px rgba(16,24,40,0.08);padding:28px}
+			h1{margin:0 0 8px;font-size:20px}
+			p.lead{margin:0 0 18px;color:var(--muted);font-size:14px}
+			form{display:grid;gap:12px}
+			label{font-size:13px;color:#111827}
+			input[type="text"],input[type="password"]{width:100%;padding:10px 12px;border:1px solid #e6eef8;border-radius:8px;font-size:14px}
+			.row{display:flex;align-items:center;justify-content:space-between}
+			.actions{display:flex;gap:8px;align-items:center}
+			button{background:var(--accent);color:#fff;padding:10px 14px;border:0;border-radius:8px;font-weight:600;cursor:pointer}
+			button.secondary{background:transparent;color:var(--accent);border:1px solid rgba(37,99,235,0.12)}
+			.note{font-size:13px;color:var(--muted);text-align:center;margin-top:14px}
+			.error{color:#b91c1c;font-size:13px;margin-top:6px}
+			.hidden{display:none}
+			.success{text-align:center;padding:22px}
+			.showpw{background:transparent;border:0;color:var(--muted);cursor:pointer}
+			@media (max-width:420px){.container{padding:16px}.card{padding:18px}}
+		</style>
+	</head>
+	<body>
+		<main class="container">
+			<section class="card" aria-labelledby="login-title">
+				<div id="form-wrap">
+					<h1 id="login-title">Sign in to your account</h1>
+					<p class="lead">One-page login demo. No backend — client-side validation only.</p>
+					<form id="login-form" novalidate>
+						<div>
+							<label for="user">Email or username</label>
+							<input id="user" name="user" type="text" inputmode="email" autocomplete="username" required aria-describedby="user-help user-err">
+							<div id="user-err" class="error" aria-live="polite"></div>
+						</div>
+
+						<div>
+							<label for="pw">Password</label>
+							<div style="display:flex;gap:8px;align-items:center">
+								<input id="pw" name="password" type="password" autocomplete="current-password" required aria-describedby="pw-err" style="flex:1">
+								<button type="button" class="showpw" id="togglePw" aria-pressed="false" aria-label="Show password">Show</button>
+							</div>
+							<div id="pw-err" class="error" aria-live="polite"></div>
+						</div>
+
+						<div class="row">
+							<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)">
+								<input type="checkbox" id="remember" name="remember"> Remember
+							</label>
+							<a href="#" onclick="event.preventDefault();alert('Password recover demo')" style="font-size:13px;color:var(--accent);text-decoration:none">Forgot?</a>
+						</div>
+
+						<div class="actions">
+							<button id="submit">Sign in</button>
+							<button type="button" class="secondary" id="demo">Use demo</button>
+						</div>
+					</form>
+					<p class="note">By continuing you agree to the demo terms of service.</p>
+				</div>
+
+				<div id="success" class="success hidden" role="status" aria-live="polite">
+					<h2 id="welcome">Welcome!</h2>
+					<p class="lead" id="welcome-sub">You are signed in (client-side demo).</p>
+					<div style="margin-top:12px">
+						<button id="signout">Sign out</button>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<script>
+			const form = document.getElementById('login-form');
+			const user = document.getElementById('user');
+			const pw = document.getElementById('pw');
+			const userErr = document.getElementById('user-err');
+			const pwErr = document.getElementById('pw-err');
+			const success = document.getElementById('success');
+			const formWrap = document.getElementById('form-wrap');
+			const welcome = document.getElementById('welcome');
+
+			function validate() {
+				let ok = true;
+				userErr.textContent = '';
+				pwErr.textContent = '';
+				const u = user.value.trim();
+				const p = pw.value;
+				if (!u || u.length < 3) { userErr.textContent = 'Enter a valid username or email (3+ chars)'; ok = false; }
+				if (!p || p.length < 6) { pwErr.textContent = 'Password must be at least 6 characters'; ok = false; }
+				return ok;
+			}
+
+			form.addEventListener('submit', e => {
+				e.preventDefault();
+				if (!validate()) return;
+				formWrap.classList.add('hidden');
+				success.classList.remove('hidden');
+				welcome.textContent = 'Welcome, ' + (user.value.trim() || 'friend') + '!';
+			});
+
+			document.getElementById('togglePw').addEventListener('click', function(){
+				const shown = pw.type === 'text';
+				pw.type = shown ? 'password' : 'text';
+				this.textContent = shown ? 'Show' : 'Hide';
+				this.setAttribute('aria-pressed', String(!shown));
+			});
+
+			document.getElementById('demo').addEventListener('click', ()=>{
+				user.value = 'demo@example.com'; pw.value = 'password';
+			});
+
+			document.getElementById('signout').addEventListener('click', ()=>{
+				pw.value = '';
+				formWrap.classList.remove('hidden');
+				success.classList.add('hidden');
+			});
+
+			// Enable Enter on inputs for accessibility
+			[user,pw].forEach(el => el.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') form.dispatchEvent(new Event('submit', {cancelable:true})); }));
+		</script>
+	</body>
+</html>
+
