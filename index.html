@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Studyspace Dashboard</title>
+	<style>
+		:root {
+			--ink: #17212b;
+			--muted: #73808c;
+			--line: #e5e9ee;
+			--paper: #f7f9fb;
+			--white: #ffffff;
+			--blue: #3867e8;
+			--blue-soft: #eaf0ff;
+			--mint: #dff7ef;
+			--yellow: #fff1c7;
+			--coral: #ffe3dc;
+			--shadow: 0 16px 40px rgba(32, 49, 72, 0.08);
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			min-height: 100vh;
+			color: var(--ink);
+			background: var(--paper);
+			font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+		}
+
+		button { font: inherit; }
+
+		.app-shell {
+			display: grid;
+			grid-template-columns: 240px minmax(0, 1fr);
+			min-height: 100vh;
+		}
+
+		.sidebar {
+			display: flex;
+			flex-direction: column;
+			padding: 28px 18px;
+			color: #dfe8ff;
+			background: #182536;
+		}
+
+		.brand {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin: 0 12px 48px;
+			color: var(--white);
+			font-size: 20px;
+			font-weight: 800;
+			letter-spacing: -0.5px;
+		}
+
+		.brand-mark {
+			display: grid;
+			width: 34px;
+			height: 34px;
+			place-items: center;
+			color: #182536;
+			border-radius: 11px;
+			background: #f2c94c;
+			font-size: 19px;
+		}
+
+		.nav-label {
+			margin: 0 14px 12px;
+			color: #8494a8;
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 1.5px;
+			text-transform: uppercase;
+		}
+
+		.nav-list { display: grid; gap: 7px; }
+
+		.nav-item {
+			display: flex;
+			align-items: center;
+			gap: 13px;
+			width: 100%;
+			padding: 12px 14px;
+			color: #aab9cb;
+			border: 0;
+			border-radius: 10px;
+			background: transparent;
+			text-align: left;
+			cursor: pointer;
+		}
+
+		.nav-item:hover, .nav-item.active {
+			color: var(--white);
+			background: #293b56;
+		}
+
+		.nav-icon { width: 20px; text-align: center; font-size: 17px; }
+
+		.sidebar-footer {
+			display: flex;
+			align-items: center;
+			gap: 11px;
+			margin-top: auto;
+			padding: 14px 10px 0;
+			border-top: 1px solid #2b3a4d;
+		}
+
+		.avatar {
+			display: grid;
+			width: 38px;
+			height: 38px;
+			flex: 0 0 auto;
+			place-items: center;
+			color: #1b473d;
+			border-radius: 50%;
+			background: #a9e4d2;
+			font-weight: 800;
+		}
+
+		.user-name { color: var(--white); font-size: 13px; font-weight: 700; }
+		.user-role { margin-top: 3px; color: #8494a8; font-size: 11px; }
+
+		main { padding: 32px 4.5%; overflow: hidden; }
+
+		.topbar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 20px;
+			margin-bottom: 32px;
+		}
+
+		.eyebrow {
+			margin: 0 0 6px;
+			color: var(--blue);
+			font-size: 12px;
+			font-weight: 800;
+			letter-spacing: 1.3px;
+			text-transform: uppercase;
+		}
+
+		h1, h2, h3, p { margin-top: 0; }
+		h1 { margin-bottom: 0; font-size: clamp(26px, 3vw, 36px); letter-spacing: -1.4px; }
+
+		.top-actions { display: flex; align-items: center; gap: 12px; }
+
+		.icon-button {
+			display: grid;
+			width: 42px;
+			height: 42px;
+			place-items: center;
+			color: var(--muted);
+			border: 1px solid var(--line);
+			border-radius: 12px;
+			background: var(--white);
+			cursor: pointer;
+			font-size: 18px;
+		}
+
+		.icon-button:hover { color: var(--blue); border-color: #b7c8fa; }
+
+		.primary-button {
+			padding: 12px 18px;
+			color: var(--white);
+			border: 0;
+			border-radius: 11px;
+			background: var(--blue);
+			box-shadow: 0 8px 18px rgba(56, 103, 232, 0.22);
+			cursor: pointer;
+			font-size: 13px;
+			font-weight: 800;
+		}
+
+		.primary-button:hover { background: #2e56c7; }
+
+		.stats-grid {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 16px;
+			margin-bottom: 24px;
+		}
+
+		.stat-card, .panel {
+			border: 1px solid var(--line);
+			border-radius: 16px;
+			background: var(--white);
+			box-shadow: var(--shadow);
+		}
+
+		.stat-card { padding: 20px; }
+		.stat-head { display: flex; justify-content: space-between; color: var(--muted); font-size: 12px; font-weight: 700; }
+		.stat-icon { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; font-size: 15px; }
+		.stat-number { margin: 16px 0 4px; font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+		.stat-note { margin: 0; color: var(--muted); font-size: 11px; }
+		.mint { background: var(--mint); } .yellow { background: var(--yellow); } .coral { background: var(--coral); } .blue { background: var(--blue-soft); }
+
+		.content-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.8fr); gap: 24px; }
+		.panel { padding: 24px; }
+		.panel-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 21px; }
+		.panel h2 { margin-bottom: 5px; font-size: 18px; letter-spacing: -0.4px; }
+		.panel-subtitle { margin: 0; color: var(--muted); font-size: 12px; }
+		.view-link { color: var(--blue); border: 0; background: none; cursor: pointer; font-size: 12px; font-weight: 800; }
+
+		.schedule-list { display: grid; gap: 12px; }
+		.schedule-item { display: grid; grid-template-columns: 62px 10px minmax(0, 1fr) auto; align-items: center; gap: 13px; padding: 12px 0; border-bottom: 1px solid #eef1f4; }
+		.schedule-item:last-child { border-bottom: 0; }
+		.time { color: var(--muted); font-size: 11px; font-weight: 700; }
+		.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
+		.dot.green { background: #41b78e; } .dot.orange { background: #ef9c4b; }
+		.subject { margin-bottom: 4px; font-size: 13px; font-weight: 800; }
+		.room { margin: 0; color: var(--muted); font-size: 11px; }
+		.tag { padding: 6px 9px; border-radius: 7px; color: #657280; background: #f2f4f6; font-size: 10px; font-weight: 800; }
+
+		.progress-card { padding: 17px 0; border-bottom: 1px solid #eef1f4; }
+		.progress-card:last-child { padding-bottom: 0; border-bottom: 0; }
+		.progress-title { display: flex; justify-content: space-between; margin-bottom: 9px; font-size: 12px; font-weight: 800; }
+		.progress-title span { color: var(--blue); }
+		.progress-track { height: 8px; overflow: hidden; border-radius: 8px; background: #edf0f3; }
+		.progress-fill { height: 100%; border-radius: inherit; background: var(--blue); }
+		.progress-fill.green { background: #42b88e; } .progress-fill.orange { background: #efaa4e; }
+		.progress-meta { display: flex; justify-content: space-between; margin-top: 7px; color: var(--muted); font-size: 10px; }
+
+		.notice { display: flex; align-items: flex-start; gap: 12px; margin-top: 24px; padding: 17px; border-radius: 13px; background: #fff8df; }
+		.notice-icon { font-size: 20px; }
+		.notice strong { display: block; margin-bottom: 4px; font-size: 12px; }
+		.notice p { margin: 0; color: #766a45; font-size: 11px; line-height: 1.5; }
+
+		@media (max-width: 900px) {
+			.app-shell { grid-template-columns: 76px minmax(0, 1fr); }
+			.sidebar { padding: 25px 10px; align-items: center; }
+			.brand { margin: 0 0 45px; }
+			.brand span, .nav-label, .nav-item span:not(.nav-icon), .sidebar-footer > div { display: none; }
+			.nav-item { justify-content: center; padding: 13px; }
+			.sidebar-footer { padding: 16px 0 0; }
+			.stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		}
+
+		@media (max-width: 650px) {
+			main { padding: 25px 18px; }
+			.topbar { align-items: flex-start; flex-direction: column; margin-bottom: 25px; }
+			.top-actions { width: 100%; }
+			.primary-button { margin-left: auto; }
+			.content-grid { grid-template-columns: 1fr; }
+			.stat-card { padding: 16px; }
+			.stat-number { font-size: 24px; }
+		}
+	</style>
+</head>
+<body>
+	<div class="app-shell">
+		<aside class="sidebar">
+			<div class="brand"><span class="brand-mark">S</span><span>studyspace</span></div>
+			<p class="nav-label">Workspace</p>
+			<nav class="nav-list" aria-label="Main navigation">
+				<button class="nav-item active" type="button"><span class="nav-icon">⌂</span><span>Overview</span></button>
+				<button class="nav-item" type="button"><span class="nav-icon">▣</span><span>My Courses</span></button>
+				<button class="nav-item" type="button"><span class="nav-icon">✓</span><span>Assignments</span></button>
+				<button class="nav-item" type="button"><span class="nav-icon">◷</span><span>Calendar</span></button>
+			</nav>
+			<p class="nav-label" style="margin-top: 34px;">Personal</p>
+			<nav class="nav-list" aria-label="Personal navigation">
+				<button class="nav-item" type="button"><span class="nav-icon">⚙</span><span>Settings</span></button>
+				<button class="nav-item" type="button"><span class="nav-icon">?</span><span>Help center</span></button>
+			</nav>
+			<div class="sidebar-footer">
+				<div class="avatar">KA</div>
+				<div><div class="user-name">Kaye Anne</div><div class="user-role">BSIT · 2nd Year</div></div>
+			</div>
+		</aside>
+
+		<main>
+			<header class="topbar">
+				<div><p class="eyebrow">Monday, September 21, 2026</p><h1>Good morning, Kaye.</h1></div>
+				<div class="top-actions"><button class="icon-button" type="button" aria-label="Notifications">♢</button><button class="primary-button" type="button">＋ Add task</button></div>
+			</header>
+
+			<section class="stats-grid" aria-label="Study overview">
+				<article class="stat-card"><div class="stat-head"><span>Current GPA</span><span class="stat-icon mint">↗</span></div><div class="stat-number">3.72</div><p class="stat-note">+0.18 from last term</p></article>
+				<article class="stat-card"><div class="stat-head"><span>Tasks due</span><span class="stat-icon yellow">!</span></div><div class="stat-number">08</div><p class="stat-note">3 due this week</p></article>
+				<article class="stat-card"><div class="stat-head"><span>Study streak</span><span class="stat-icon coral">★</span></div><div class="stat-number">12 days</div><p class="stat-note">Your best: 19 days</p></article>
+				<article class="stat-card"><div class="stat-head"><span>Attendance</span><span class="stat-icon blue">✓</span></div><div class="stat-number">96%</div><p class="stat-note">Excellent standing</p></article>
+			</section>
+
+			<section class="content-grid">
+				<article class="panel">
+					<div class="panel-header"><div><h2>Today’s schedule</h2><p class="panel-subtitle">September 21 · 4 classes planned</p></div><button class="view-link" type="button">View calendar →</button></div>
+					<div class="schedule-list">
+						<div class="schedule-item"><span class="time">08:00 AM</span><span class="dot"></span><div><div class="subject">Application Development</div><p class="room">Room 304 · Prof. Santos</p></div><span class="tag">In 25 min</span></div>
+						<div class="schedule-item"><span class="time">10:30 AM</span><span class="dot green"></span><div><div class="subject">Database Management</div><p class="room">Lab 2 · Prof. Cruz</p></div><span class="tag">Class</span></div>
+						<div class="schedule-item"><span class="time">01:00 PM</span><span class="dot orange"></span><div><div class="subject">Web Systems and Technologies</div><p class="room">Room 201 · Prof. Reyes</p></div><span class="tag">Class</span></div>
+						<div class="schedule-item"><span class="time">03:30 PM</span><span class="dot green"></span><div><div class="subject">Free study block</div><p class="room">Library · 2 hours reserved</p></div><span class="tag">Focus</span></div>
+					</div>
+				</article>
+
+				<article class="panel">
+					<div class="panel-header"><div><h2>Course progress</h2><p class="panel-subtitle">Keep moving forward</p></div><button class="view-link" type="button">All courses →</button></div>
+					<div class="progress-card"><div class="progress-title">Application Development <span>82%</span></div><div class="progress-track"><div class="progress-fill" style="width: 82%;"></div></div><div class="progress-meta"><span>8 of 10 modules</span><span>On track</span></div></div>
+					<div class="progress-card"><div class="progress-title">Database Management <span>68%</span></div><div class="progress-track"><div class="progress-fill green" style="width: 68%;"></div></div><div class="progress-meta"><span>6 of 9 modules</span><span>On track</span></div></div>
+					<div class="progress-card"><div class="progress-title">Web Technologies <span>54%</span></div><div class="progress-track"><div class="progress-fill orange" style="width: 54%;"></div></div><div class="progress-meta"><span>5 of 9 modules</span><span>Needs focus</span></div></div>
+					<div class="notice"><span class="notice-icon">✦</span><div><strong>Small steps add up</strong><p>You have completed 74% of your weekly study goal. Keep your 12-day streak going.</p></div></div>
+				</article>
+			</section>
+		</main>
+	</div>
+</body>
+</html>
