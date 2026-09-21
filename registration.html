@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Registration</title>
+  <style>
+    :root {
+      --bg: #f3f7ff;
+      --panel: #ffffff;
+      --primary: #335cff;
+      --primary-dark: #1f46d4;
+      --accent: #eaf0ff;
+      --text: #1f2937;
+      --muted: #667085;
+      --line: #dfe7f5;
+      --success: #159a6e;
+      --shadow: 0 24px 60px rgba(32, 70, 171, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #edf4ff 0%, #f9fbff 100%);
+      color: var(--text);
+    }
+
+    .page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+    }
+
+    .card {
+      width: min(1100px, 100%);
+      display: grid;
+      grid-template-columns: 1.05fr 1.2fr;
+      background: var(--panel);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(51, 92, 255, 0.08);
+    }
+
+    .brand-panel {
+      position: relative;
+      padding: 42px 36px;
+      background: linear-gradient(180deg, #1e2b4d 0%, #203b64 100%);
+      color: #ffffff;
+    }
+
+    .brand-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(92, 140, 255, 0.35), transparent 35%);
+    }
+
+    .brand-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-badge span {
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #7ae0b8;
+      color: #123a2f;
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .brand-copy h1 {
+      margin: 28px 0 12px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+    }
+
+    .brand-copy p {
+      margin: 0;
+      max-width: 360px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.7;
+      font-size: 0.98rem;
+    }
+
+    .mini-stats {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .mini-stat {
+      min-width: 120px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+
+    .mini-stat span {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .form-panel {
+      padding: 38px 36px 30px;
+      background: #ffffff;
+    }
+
+    .form-header {
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 0.76rem;
+      letter-spacing: 0.12em;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .form-header h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 2vw, 2.5rem);
+      letter-spacing: -0.05em;
+    }
+
+    .form-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    form {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px 15px;
+      border: 1px solid var(--line);
+      background: #f9fbff;
+      border-radius: 12px;
+      font-size: 0.96rem;
+      color: var(--text);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: rgba(51, 92, 255, 0.6);
+      box-shadow: 0 0 0 4px rgba(51, 92, 255, 0.12);
+      background: #ffffff;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .checkbox-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .checkbox-row a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .submit-btn {
+      margin-top: 8px;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 16px 28px rgba(51, 92, 255, 0.25);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .login-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    @media (max-width: 820px) {
+      .card {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-panel {
+        padding-bottom: 26px;
+      }
+
+      .form-panel {
+        padding: 28px 22px 22px;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .page {
+        padding: 16px;
+      }
+
+      .grid-two {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <aside class="brand-panel">
+        <div class="brand-content">
+          <div>
+            <div class="brand-badge"><span>✓</span> New Student</div>
+            <div class="brand-copy">
+              <h1>Start your journey with us.</h1>
+              <p>
+                Create your student account to access your classes, enrollment tools,
+                and academic dashboard.
+              </p>
+            </div>
+          </div>
+
+          <div class="mini-stats">
+            <div class="mini-stat">
+              <strong>20+</strong>
+              <span>Programs</span>
+            </div>
+            <div class="mini-stat">
+              <strong>98%</strong>
+              <span>Support</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="form-panel">
+        <div class="form-header">
+          <span class="eyebrow">Register</span>
+          <h2>Create an account</h2>
+          <p>Fill in your details below to get started.</p>
+        </div>
+
+        <form>
+          <div class="grid-two">
+            <div class="field">
+              <label for="firstName">First Name</label>
+              <input id="firstName" type="text" placeholder="Enter first name" />
+            </div>
+            <div class="field">
+              <label for="lastName">Last Name</label>
+              <input id="lastName" type="text" placeholder="Enter last name" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email Address</label>
+            <input id="email" type="email" placeholder="you@example.com" />
+          </div>
+
+          <div class="grid-two">
+            <div class="field">
+              <label for="studentId">Student ID</label>
+              <input id="studentId" type="text" placeholder="2024-12345" />
+            </div>
+            <div class="field">
+              <label for="course">Course</label>
+              <select id="course">
+                <option selected disabled>Select your course</option>
+                <option>BS Information Technology</option>
+                <option>BS Computer Science</option>
+                <option>BS Business Administration</option>
+                <option>BS Education</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-two">
+            <div class="field">
+              <label for="password">Password</label>
+              <input id="password" type="password" placeholder="Create password" />
+            </div>
+            <div class="field">
+              <label for="confirmPassword">Confirm Password</label>
+              <input id="confirmPassword" type="password" placeholder="Confirm password" />
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input type="checkbox" />
+            <span>I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>.</span>
+          </label>
+
+          <button class="submit-btn" type="submit">Register Now</button>
+
+          <div class="login-link">
+            Already have an account? <a href="#">Sign in</a>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
